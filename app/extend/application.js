@@ -16,68 +16,91 @@ module.exports = {
     const defaultOptions = this.config.jsonp;
     options = Object.assign({}, defaultOptions, options);
 
-    const csrfEnable =
-      this.config.security.csrf && this.config.security.csrf.enable !== false // global csrf security enabled
+    const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
+       && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
       && options.csrf;  // jsonp csrf enabled
 
-    if (!options.whiteList || !options.whiteList.length && !csrfEnable) {
+    const validateReferrer = options.whiteList && createValidateReferer(options.whiteList);
+
+    if (!csrfEnable && !validateReferrer) {
       this.coreLogger.warn('[egg-jsonp] SECURITY WARNING!! csrf check and referrer check are both closed!');
     }
-    const assertRerfer = createAssertReferer(options.whiteList);
+    /**
+     * jsonp request security check, pass if
+     *
+     * 1. hit referrer white list
+     * 2. or pass csrf check
+     * 3. both check are disabled
+     *
+     * @param  {Context} ctx request context
+     */
+    function securityAssert(ctx) {
+      // all disabled. don't need check
+      if (!csrfEnable && !validateReferrer) return;
+
+      // pass referrer check
+      const referrer = ctx.get('referrer');
+      if (validateReferrer && validateReferrer(referrer)) return;
+      if (csrfEnable && validateCsrf(ctx)) return;
+
+      const err = new Error('jsonp request security validate failed');
+      err.referrer = referrer;
+      err.status = 403;
+      throw err;
+    }
 
     return function* jsonp(next) {
-      // security checks
-      if (csrfEnable) this.assertCsrf();
-      assertRerfer(this.get('referrer'));
+      // before handle request, must do some security checks
+      securityAssert(this);
 
       yield next;
 
+      // generate jsonp body
       const jsonpFunction = this.query[options.callback];
       if (jsonpFunction) {
         this.set('x-content-type-options', 'nosniff');
         this.type = 'js';
         const body = this.body === undefined ? null : this.body;
+        // protect from jsonp xss
         this.body = jsonpBody(body, jsonpFunction, options);
       }
     };
   },
 };
 
-function createAssertReferer(whiteList) {
-  if (!whiteList || !whiteList.length) return noop;
+function createValidateReferer(whiteList) {
   if (!Array.isArray(whiteList)) whiteList = [ whiteList ];
 
   return function(referrer) {
-    let match = false;
     let parsed = null;
     for (const item of whiteList) {
       if (is.regExp(item) && item.test(referrer)) {
         // regexp(/^https?:\/\/github.com\//): test the referrer with item
-        match = true;
-        break;
-      } else {
-        parsed = parsed || url.parse(referrer);
-        const { hostname } = parsed;
+        return true;
+      }
 
-        if (item[0] === '.' &&
-          (hostname.endsWith(item) || hostname === item.slice(1))) {
-          // string start with `.`(.github.com): referrer's hostname must ends with item
-          match = true;
-          return;
-        } else if (hostname === item) {
-          // string not start with `.`(github.com): referrer's hostname must strict equal to item
-          match = true;
-          return;
-        }
+      parsed = parsed || url.parse(referrer);
+      const { hostname } = parsed;
+
+      if (item[0] === '.' &&
+        (hostname.endsWith(item) || hostname === item.slice(1))) {
+        // string start with `.`(.github.com): referrer's hostname must ends with item
+        return true;
+      } else if (hostname === item) {
+        // string not start with `.`(github.com): referrer's hostname must strict equal to item
+        return true;
       }
     }
 
-    if (!match) {
-      const err = new Error('jsonp referrer invalid');
-      err.status = 403;
-      throw err;
-    }
+    return false;
   };
 }
 
-function noop() {}
+function validateCsrf(ctx) {
+  try {
+    ctx.assertCsrf();
+    return true;
+  } catch (_) {
+    return false;
+  }
+}

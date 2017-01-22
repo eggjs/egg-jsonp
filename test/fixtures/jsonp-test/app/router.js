@@ -9,4 +9,5 @@ module.exports = app => {
   app.get('/referrer/equal', app.enableJsonp({ whiteList: 'test.com' }), 'jsonp.index');
   app.get('/referrer/regexp', app.enableJsonp({ whiteList: [/https?:\/\/test\.com\//, /https?:\/\/foo\.com\//] }), 'jsonp.index');
   app.get('/csrf', app.enableJsonp({ csrf: true }), 'jsonp.index');
+  app.get('/both', app.enableJsonp({ csrf: true, whiteList: 'test.com' }), 'jsonp.index');
 };

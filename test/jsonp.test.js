@@ -24,14 +24,14 @@ describe('test/jsonp.test.js', () => {
 
   it('should support jsonp', function* () {
     yield request(app.callback())
-    .get('/default?_callback=fn')
+    .get('/default?callback=fn')
     .expect(200)
     .expect('/**/ typeof fn === \'function\' && fn({"foo":"bar"});');
   });
 
   it('should support jsonp if response is empty', function* () {
     yield request(app.callback())
-    .get('/empty?_callback=fn')
+    .get('/empty?callback=fn')
     .expect(200)
     .expect('/**/ typeof fn === \'function\' && fn(null);');
   });
@@ -97,7 +97,7 @@ describe('test/jsonp.test.js', () => {
     .get('/referrer/subdomain')
     .set('referrer', 'https://sub.sub.test1.com/')
     .expect(403)
-    .expect(/jsonp referrer invalid/);
+    .expect(/jsonp request security validate failed/);
   });
 
   it('should pass referrer white list with domain', function* () {
@@ -117,13 +117,13 @@ describe('test/jsonp.test.js', () => {
     .get('/referrer/equal')
     .set('referrer', 'https://sub.sub.test.com/')
     .expect(403)
-    .expect(/jsonp referrer invalid/);
+    .expect(/jsonp request security validate failed/);
 
     yield request(app.callback())
     .get('/referrer/equal')
     .set('referrer', 'https://sub.sub.test1.com/')
     .expect(403)
-    .expect(/jsonp referrer invalid/);
+    .expect(/jsonp request security validate failed/);
   });
 
   it('should pass referrer white array and regexp', function* () {
@@ -143,12 +143,36 @@ describe('test/jsonp.test.js', () => {
     .get('/referrer/regexp')
     .set('referrer', 'https://sub.sub.test.com/')
     .expect(403)
-    .expect(/jsonp referrer invalid/);
+    .expect(/jsonp request security validate failed/);
 
     yield request(app.callback())
     .get('/referrer/regexp')
     .set('referrer', 'https://sub.sub.test1.com/')
     .expect(403)
-    .expect(/jsonp referrer invalid/);
+    .expect(/jsonp request security validate failed/);
+  });
+
+  it('should pass when pass csrf but not hit referrer white list', function* () {
+    yield request(app.callback())
+    .get('/both')
+    .set('cookie', 'csrfToken=token;')
+    .set('x-csrf-token', 'token')
+    .expect(200)
+    .expect({ foo: 'bar' });
+  });
+
+  it('should pass when not pass csrf but hit referrer white list', function* () {
+    yield request(app.callback())
+    .get('/both')
+    .set('referrer', 'https://test.com/')
+    .expect(200)
+    .expect({ foo: 'bar' });
+  });
+
+  it('should 403 when not pass csrf and not hit referrer white list', function* () {
+    yield request(app.callback())
+    .get('/both')
+    .expect(403)
+    .expect(/jsonp request security validate failed/);
   });
 });

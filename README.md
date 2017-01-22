@@ -45,6 +45,51 @@ exports.jsonp = {
 * {Boolean} csrf - enable csrf check or not. default to false
 * {String|RegExp|Array} whiteList - referrer white list
 
+if whiteList's type is `RegExp`, referrer must match `whiteList`, pay attention to the first `^` and last `/`.
+
+```js
+exports.jsonp = {
+  whiteList: /^https?:\/\/test.com\//,
+}
+// matchs referrer:
+// https://test.com/hello
+// http://test.com/
+```
+
+if whiteList's type is `String` and starts with `.`:
+
+```js
+exports.jsonp = {
+  whiteList: '.test.com',
+};
+// matchs domain test.com:
+// https://test.com/hello
+// http://test.com/
+
+// matchs subdomain
+// https://sub.test.com/hello
+// http://sub.sub.test.com/
+```
+
+if whiteList's type is `String` and not starts with `.`:
+
+```js
+exports.jsonp = {
+  whiteList: 'sub.test.com',
+};
+// only matchs domain sub.test.com:
+// https://sub.test.com/hello
+// http://sub.test.com/
+```
+
+whiteList also can be an array:
+
+```js
+exports.jsonp = {
+  whiteList: [ '.foo.com', '.bar.com' ],
+};
+```
+
 see [config/config.default.js](config/config.default.js) for more detail.
 
 ## Example
