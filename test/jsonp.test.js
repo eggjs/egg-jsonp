@@ -36,7 +36,7 @@ describe('test/jsonp.test.js', () => {
     .expect('/**/ typeof fn === \'function\' && fn(null);');
   });
 
-  it('should not support jsonp if not use enableJsonp middleware', function* () {
+  it('should not support jsonp if not use jsonp middleware', function* () {
     yield request(app.callback())
     .get('/disable?_callback=fn')
     .expect(200)

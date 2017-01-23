@@ -12,7 +12,7 @@ module.exports = {
    * @return {Function} jsonp middleware
    * @public
    */
-  enableJsonp(options) {
+  jsonp(options) {
     const defaultOptions = this.config.jsonp;
     options = Object.assign({}, defaultOptions, options);
 

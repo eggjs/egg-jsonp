@@ -97,8 +97,13 @@ see [config/config.default.js](config/config.default.js) for more detail.
 In `app/router.js`
 
 ```js
-app.get('/default', app.enableJsonp(), 'jsonp.index');
-app.get('/customize', app.enableJsonp({ callback: 'fn' }), 'jsonp.index');
+// Create once and use in any router you want to support jsonp.
+const jsonp = app.jsonp();
+app.get('/default', jsonp, 'jsonp.index');
+app.get('/another', jsonp, 'jsonp.another');
+
+// Customize by create another jsonp middleware with specific sonfigurations.
+app.get('/customize', app.jsonp({ callback: 'fn' }), 'jsonp.customize');
 ```
 
 ## Questions & Suggestions
