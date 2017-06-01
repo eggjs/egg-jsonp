@@ -29,6 +29,13 @@ describe('test/jsonp.test.js', () => {
     .expect('/**/ typeof fn === \'function\' && fn({"foo":"bar"});');
   });
 
+  it('should support _callback', function* () {
+    yield request(app.callback())
+    .get('/default?_callback=fn')
+    .expect(200)
+    .expect('/**/ typeof fn === \'function\' && fn({"foo":"bar"});');
+  });
+
   it('should support jsonp if response is empty', function* () {
     yield request(app.callback())
     .get('/empty?callback=fn')
