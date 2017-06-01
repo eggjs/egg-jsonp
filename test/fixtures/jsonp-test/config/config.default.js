@@ -3,6 +3,5 @@
 module.exports = {
   keys: 'keys',
   jsonp: {
-    callback: 'callback',
   },
 };

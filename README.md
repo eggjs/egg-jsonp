@@ -40,7 +40,7 @@ exports.jsonp = {
 
 ## Configuration
 
-* {String} callback - jsonp callback method key, default to `_callback`
+* {String|Array} callback - jsonp callback method key, default to `[ '_callback', 'callback' ]`
 * {Number} limit - callback method name's max length, default to `50`
 * {Boolean} csrf - enable csrf check or not. default to false
 * {String|RegExp|Array} whiteList - referrer white list
