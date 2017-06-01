@@ -53,7 +53,7 @@
     "lib"
   ],
   "ci": {
-    "version": "6, 7"
+    "version": "6, 7, 8"
   },
   "repository": {
     "type": "git",
