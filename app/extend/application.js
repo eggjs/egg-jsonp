@@ -15,6 +15,7 @@ module.exports = {
   jsonp(options) {
     const defaultOptions = this.config.jsonp;
     options = Object.assign({}, defaultOptions, options);
+    if (!Array.isArray(options.callback)) options.callback = [ options.callback ];
 
     const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
        && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
@@ -56,7 +57,7 @@ module.exports = {
       yield next;
 
       // generate jsonp body
-      const jsonpFunction = this.query[options.callback];
+      const jsonpFunction = getJsonpFunction(this.query, options.callback);
       if (jsonpFunction) {
         this.set('x-content-type-options', 'nosniff');
         this.type = 'js';
@@ -102,5 +103,11 @@ function validateCsrf(ctx) {
     return true;
   } catch (_) {
     return false;
+  }
+}
+
+function getJsonpFunction(query, callbacks) {
+  for (const callback of callbacks) {
+    if (query[callback]) return query[callback];
   }
 }
