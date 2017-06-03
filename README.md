@@ -90,7 +90,8 @@ exports.jsonp = {
 };
 ```
 
-see [config/config.default.js](config/config.default.js) for more detail.
+see [config/config.default.js](https://github.com/eggjs/egg-jsonp/blob/master/config/config.default.js) for more detail.
+
 
 ## Example
 
@@ -112,4 +113,5 @@ Please open an issue [here](https://github.com/eggjs/egg/issues).
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/eggjs/egg-jsonp/blob/master/LICENSE)
+
