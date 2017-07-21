@@ -182,4 +182,12 @@ describe('test/jsonp.test.js', () => {
     .expect(403)
     .expect(/jsonp request security validate failed/);
   });
+
+  it('should 403 when not pass csrf and referrer illegal', function* () {
+    yield request(app.callback())
+    .get('/both')
+    .set('referrer', '/hello')
+    .expect(403)
+    .expect(/jsonp request security validate failed/);
+  });
 });
