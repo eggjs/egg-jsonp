@@ -81,7 +81,7 @@ function createValidateReferer(whiteList) {
       }
 
       parsed = parsed || url.parse(referrer);
-      const { hostname } = parsed;
+      const hostname = parsed.hostname || '';
 
       if (item[0] === '.' &&
         (hostname.endsWith(item) || hostname === item.slice(1))) {
