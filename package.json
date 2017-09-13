@@ -44,14 +44,6 @@
     "ci": "npm run lint && npm run cov",
     "autod": "autod"
   },
-  "files": [
-    "index.js",
-    "app.js",
-    "agent.js",
-    "config",
-    "app",
-    "lib"
-  ],
   "ci": {
     "version": "6, 7, 8"
   },
