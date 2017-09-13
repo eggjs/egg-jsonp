@@ -18,7 +18,7 @@ module.exports = {
 
     const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
       && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
-      && options.csrf;  // jsonp csrf enabled
+      && options.csrf; // jsonp csrf enabled
 
     const validateReferrer = options.whiteList && createValidateReferer(options.whiteList);
 
