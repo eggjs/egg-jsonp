@@ -51,20 +51,39 @@ module.exports = {
     }
 
     return function* jsonp(next) {
+      const jsonpFunction = getJsonpFunction(this.query, options.callback);
+
+      // mark this request is jsonp, readonly
+      Object.defineProperty(this, 'jsonpFunction', {
+        value: jsonpFunction || false,
+        configurable: false,
+        writable: false,
+        enumerable: false,
+      });
+
+      // set jonsp response wrap function, othen plugin can use it.
+      Object.defineProperty(this, 'jsonpResponseWrap', {
+        value(body) {
+          if (!this.jsonpFunction) return;
+
+          this.set('x-content-type-options', 'nosniff');
+          this.type = 'js';
+          body = body === undefined ? null : body;
+          // protect from jsonp xss
+          this.body = jsonpBody(body, this.jsonpFunction, options);
+        },
+        configurable: false,
+        writable: false,
+        enumerable: false,
+      });
+
       // before handle request, must do some security checks
       securityAssert(this);
 
       yield next;
 
       // generate jsonp body
-      const jsonpFunction = getJsonpFunction(this.query, options.callback);
-      if (jsonpFunction) {
-        this.set('x-content-type-options', 'nosniff');
-        this.type = 'js';
-        const body = this.body === undefined ? null : this.body;
-        // protect from jsonp xss
-        this.body = jsonpBody(body, jsonpFunction, options);
-      }
+      this.jsonpResponseWrap(this.body);
     };
   },
 };
