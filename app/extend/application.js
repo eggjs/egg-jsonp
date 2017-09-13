@@ -1,6 +1,5 @@
 'use strict';
 
-const jsonpBody = require('jsonp-body');
 const is = require('is-type-of');
 const url = require('url');
 
@@ -18,7 +17,7 @@ module.exports = {
     if (!Array.isArray(options.callback)) options.callback = [ options.callback ];
 
     const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
-       && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
+      && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
       && options.csrf;  // jsonp csrf enabled
 
     const validateReferrer = options.whiteList && createValidateReferer(options.whiteList);
@@ -51,27 +50,11 @@ module.exports = {
     }
 
     return function* jsonp(next) {
-      const jsonpFunction = getJsonpFunction(this.query, options.callback);
+      const jsonpFunctionName = getJsonpFunction(this.query, options.callback);
 
       // mark this request is jsonp, readonly
       Object.defineProperty(this, 'jsonpFunction', {
-        value: jsonpFunction || false,
-        configurable: false,
-        writable: false,
-        enumerable: false,
-      });
-
-      // set jonsp response wrap function, othen plugin can use it.
-      Object.defineProperty(this, 'jsonpResponseWrap', {
-        value(body) {
-          if (!this.jsonpFunction) return;
-
-          this.set('x-content-type-options', 'nosniff');
-          this.type = 'js';
-          body = body === undefined ? null : body;
-          // protect from jsonp xss
-          this.body = jsonpBody(body, this.jsonpFunction, options);
-        },
+        value: jsonpFunctionName ? { name: jsonpFunctionName, option: options } : false,
         configurable: false,
         writable: false,
         enumerable: false,

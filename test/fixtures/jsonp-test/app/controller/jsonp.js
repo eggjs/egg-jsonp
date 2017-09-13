@@ -7,7 +7,7 @@ exports.index = function*() {
 exports.empty = function*() {};
 
 exports.mark = function*() {
-  this.body = { jsonpFunction: this.jsonpFunction };
+  this.body = { jsonpFunction: this.jsonpFunction && this.jsonpFunction.name };
 };
 
 exports.error = function*() {
