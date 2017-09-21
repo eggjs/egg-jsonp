@@ -18,8 +18,8 @@ module.exports = {
     if (!Array.isArray(options.callback)) options.callback = [ options.callback ];
 
     const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
-       && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
-      && options.csrf;  // jsonp csrf enabled
+      && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
+      && options.csrf; // jsonp csrf enabled
 
     const validateReferrer = options.whiteList && createValidateReferer(options.whiteList);
 
@@ -63,7 +63,7 @@ module.exports = {
 
       yield next;
 
-       // generate jsonp body
+      // generate jsonp body
       this.wrapJsonp(this.body);
     };
   },
