@@ -190,4 +190,25 @@ describe('test/jsonp.test.js', () => {
     .expect(403)
     .expect(/jsonp request security validate failed/);
   });
+
+  it('should pass and return is a jsonp function', function* () {
+    yield request(app.callback())
+      .get('/mark?_callback=fn')
+      .expect(200)
+      .expect('/**/ typeof fn === \'function\' && fn({"jsonpFunction":true});');
+  });
+
+  it('should pass and return is not a jsonp function', function* () {
+    yield request(app.callback())
+      .get('/mark')
+      .expect(200)
+      .expect({ jsonpFunction: false });
+  });
+
+  it('should pass and return error message', function* () {
+    yield request(app.callback())
+      .get('/error?_callback=fn')
+      .expect(200)
+      .expect('/**/ typeof fn === \'function\' && fn({"msg":"jsonpFunction is error"});');
+  });
 });

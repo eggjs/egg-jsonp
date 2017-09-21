@@ -19,17 +19,17 @@
     "security"
   ],
   "dependencies": {
-    "is-type-of": "^1.0.0",
+    "is-type-of": "^1.2.0",
     "jsonp-body": "^1.0.0"
   },
   "devDependencies": {
-    "autod": "^2.8.0",
-    "egg": "^1.4.0",
-    "egg-bin": "^3.4.1",
-    "egg-ci": "^1.6.0",
-    "egg-mock": "^3.7.1",
-    "eslint": "^3.19.0",
-    "eslint-config-egg": "^4.2.0",
+    "autod": "^2.9.0",
+    "egg": "^1.8.0",
+    "egg-bin": "^4.3.2",
+    "egg-ci": "^1.8.0",
+    "egg-mock": "^3.12.1",
+    "eslint": "^4.7.1",
+    "eslint-config-egg": "^5.1.1",
     "supertest": "^3.0.0",
     "webstorm-disable-index": "^1.2.0"
   },
@@ -44,14 +44,6 @@
     "ci": "npm run lint && npm run cov",
     "autod": "autod"
   },
-  "files": [
-    "index.js",
-    "app.js",
-    "agent.js",
-    "config",
-    "app",
-    "lib"
-  ],
   "ci": {
     "version": "6, 7, 8"
   },

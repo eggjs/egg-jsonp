@@ -92,6 +92,14 @@ exports.jsonp = {
 
 see [config/config.default.js](https://github.com/eggjs/egg-jsonp/blob/master/config/config.default.js) for more detail.
 
+## API
+
+* ctx.acceptJSONP - detect if response should be jsonp, readonly
+* ctx.wrapJsonp(body) - wrap data to jsonp
+
+```js
+ ctx.wrapJsonp({msg: 'error message'}); // this.body = fn({msg: 'error message'})
+```
 
 ## Example
 

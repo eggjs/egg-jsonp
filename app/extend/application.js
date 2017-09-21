@@ -1,8 +1,8 @@
 'use strict';
 
-const jsonpBody = require('jsonp-body');
 const is = require('is-type-of');
 const url = require('url');
+const JSONP_CONFIG = Symbol.for('jsonp#config');
 
 module.exports = {
   /**
@@ -51,20 +51,20 @@ module.exports = {
     }
 
     return function* jsonp(next) {
+      const jsonpFunction = getJsonpFunction(this.query, options.callback);
+
+      this[JSONP_CONFIG] = {
+        jsonpFunction,
+        options,
+      };
+
       // before handle request, must do some security checks
       securityAssert(this);
 
       yield next;
 
-      // generate jsonp body
-      const jsonpFunction = getJsonpFunction(this.query, options.callback);
-      if (jsonpFunction) {
-        this.set('x-content-type-options', 'nosniff');
-        this.type = 'js';
-        const body = this.body === undefined ? null : this.body;
-        // protect from jsonp xss
-        this.body = jsonpBody(body, jsonpFunction, options);
-      }
+       // generate jsonp body
+      this.wrapJsonp(this.body);
     };
   },
 };
