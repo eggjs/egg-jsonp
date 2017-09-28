@@ -1,7 +1,7 @@
 'use strict';
 
 const jsonpBody = require('jsonp-body');
-const JSONP_CONFIG = Symbol.for('jsonp#config');
+const JSONP_CONFIG = require('../../lib/private_key').JSONP_CONFIG;
 
 module.exports = {
   /**
@@ -13,11 +13,11 @@ module.exports = {
 
   /**
    * jsonp wrap body function
-   * set jonsp response wrap function, othen plugin can use it.
+   * set jsonp response wrap function, other plugin can use it.
    * @param {Object} body respones body
    * @public
    */
-  wrapJsonp(body) {
+  wrapJSONP(body) {
     const jsonpConfig = this[JSONP_CONFIG];
     if (!jsonpConfig || !jsonpConfig.jsonpFunction) {
       this.body = body;
