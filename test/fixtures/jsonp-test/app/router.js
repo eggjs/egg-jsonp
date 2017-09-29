@@ -15,7 +15,7 @@ module.exports = app => {
     try {
       yield next;
     } catch (error) {
-      this.wrapJSONP({ msg: error.message });
+      this[Symbol.for('jsonp#wrapper')]({ msg: error.message });
     }
    }, app.jsonp(), 'jsonp.error');
 };

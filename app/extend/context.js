@@ -1,7 +1,7 @@
 'use strict';
 
 const jsonpBody = require('jsonp-body');
-const JSONP_CONFIG = require('../../lib/private_key').JSONP_CONFIG;
+const { JSONP_CONFIG, JSONP_WRAPPER } = require('../../lib/private_key');
 
 module.exports = {
   /**
@@ -17,7 +17,7 @@ module.exports = {
    * @param {Object} body respones body
    * @public
    */
-  wrapJSONP(body) {
+  [JSONP_WRAPPER](body) {
     const jsonpConfig = this[JSONP_CONFIG];
     if (!jsonpConfig || !jsonpConfig.jsonpFunction) {
       this.body = body;

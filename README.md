@@ -95,11 +95,6 @@ see [config/config.default.js](https://github.com/eggjs/egg-jsonp/blob/master/co
 ## API
 
 * ctx.acceptJSONP - detect if response should be jsonp, readonly
-* ctx.wrapJSONP(body) - wrap data to jsonp
-
-```js
- ctx.wrapJSONP({ msg: 'error message' }); // this.body = fn({ msg: 'error message' })
-```
 
 ## Example
 

@@ -2,7 +2,7 @@
 
 const is = require('is-type-of');
 const url = require('url');
-const JSONP_CONFIG = require('../../lib/private_key').JSONP_CONFIG;
+const { JSONP_CONFIG, JSONP_WRAPPER } = require('../../lib/private_key');
 
 module.exports = {
   /**
@@ -64,7 +64,7 @@ module.exports = {
       yield next;
 
       // generate jsonp body
-      this.wrapJSONP(this.body);
+      this[JSONP_WRAPPER](this.body);
     };
   },
 };
