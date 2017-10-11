@@ -92,6 +92,9 @@ exports.jsonp = {
 
 see [config/config.default.js](https://github.com/eggjs/egg-jsonp/blob/master/config/config.default.js) for more detail.
 
+## API
+
+* ctx.acceptJSONP - detect if response should be jsonp, readonly
 
 ## Example
 

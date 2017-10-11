@@ -10,4 +10,12 @@ module.exports = app => {
   app.get('/referrer/regexp', app.jsonp({ whiteList: [/https?:\/\/test\.com\//, /https?:\/\/foo\.com\//] }), 'jsonp.index');
   app.get('/csrf', app.jsonp({ csrf: true }), 'jsonp.index');
   app.get('/both', app.jsonp({ csrf: true, whiteList: 'test.com' }), 'jsonp.index');
+  app.get('/mark', app.jsonp(), 'jsonp.mark');
+  app.get('/error', function*(next) {
+    try {
+      yield next;
+    } catch (error) {
+      this[Symbol.for('jsonp#wrapper')]({ msg: error.message });
+    }
+   }, app.jsonp(), 'jsonp.error');
 };

@@ -1,8 +1,8 @@
 'use strict';
 
-const jsonpBody = require('jsonp-body');
 const is = require('is-type-of');
 const url = require('url');
+const { JSONP_CONFIG, JSONP_WRAPPER } = require('../../lib/private_key');
 
 module.exports = {
   /**
@@ -18,8 +18,8 @@ module.exports = {
     if (!Array.isArray(options.callback)) options.callback = [ options.callback ];
 
     const csrfEnable = this.plugins.security && this.plugins.security.enable // security enable
-       && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
-      && options.csrf;  // jsonp csrf enabled
+      && this.config.security.csrf && this.config.security.csrf.enable !== false // csrf enable
+      && options.csrf; // jsonp csrf enabled
 
     const validateReferrer = options.whiteList && createValidateReferer(options.whiteList);
 
@@ -51,20 +51,20 @@ module.exports = {
     }
 
     return function* jsonp(next) {
+      const jsonpFunction = getJsonpFunction(this.query, options.callback);
+
+      this[JSONP_CONFIG] = {
+        jsonpFunction,
+        options,
+      };
+
       // before handle request, must do some security checks
       securityAssert(this);
 
       yield next;
 
       // generate jsonp body
-      const jsonpFunction = getJsonpFunction(this.query, options.callback);
-      if (jsonpFunction) {
-        this.set('x-content-type-options', 'nosniff');
-        this.type = 'js';
-        const body = this.body === undefined ? null : this.body;
-        // protect from jsonp xss
-        this.body = jsonpBody(body, jsonpFunction, options);
-      }
+      this[JSONP_WRAPPER](this.body);
     };
   },
 };

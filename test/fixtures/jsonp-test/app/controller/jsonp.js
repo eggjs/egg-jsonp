@@ -5,3 +5,12 @@ exports.index = function*() {
 };
 
 exports.empty = function*() {};
+
+
+exports.mark = function*() {
+  this.body = { jsonpFunction: this.acceptJSONP };
+};
+
+exports.error = function*() {
+  throw new Error('jsonpFunction is error');
+};
