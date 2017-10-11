@@ -1,4 +1,10 @@
 
+1.2.0 / 2017-10-11
+==================
+
+**features**
+  * [[`ee98948`](http://github.com/eggjs/egg-jsonp/commit/ee9894834ed8de081b26680a58506896d736cb61)] - feat: add acceptJSONP and open jsonp wrap function (#8) (Gao Peng <<ggjqzjgp103@qq.com>>)
+
 1.1.2 / 2017-07-21
 ==================
 
