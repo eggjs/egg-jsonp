@@ -10,6 +10,7 @@
   },
   "files": [
     "app",
+    "lib",
     "config"
   ],
   "keywords": [
