@@ -1,4 +1,10 @@
 
+1.2.1 / 2017-10-11
+==================
+
+**fixes**
+  * [[`a19f450`](http://github.com/eggjs/egg-jsonp/commit/a19f45089ed8229a3ee0099a730a2be9ea57b114)] - fix: add lib into files (dead-horse <<dead_horse@qq.com>>)
+
 1.2.0 / 2017-10-11
 ==================
 
