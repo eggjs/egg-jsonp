@@ -1,4 +1,13 @@
 
+1.2.2 / 2017-11-10
+==================
+
+**fixes**
+  * [[`d14d2d6`](http://github.com/eggjs/egg-jsonp/commit/d14d2d6aa1cdc50ff084f801fa741221667ee577)] - fix: rename to createJsonpBody (#9) (Yiyu He <<dead_horse@qq.com>>)
+
+**others**
+  * [[`f7137a0`](http://github.com/eggjs/egg-jsonp/commit/f7137a011b202882fbfd48a4ee434031a9b950d2)] - chore: add pkgfiles check in ci (dead-horse <<dead_horse@qq.com>>)
+
 1.2.1 / 2017-10-11
 ==================
 
