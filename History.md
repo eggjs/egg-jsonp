@@ -1,4 +1,10 @@
 
+2.0.0 / 2017-11-11
+==================
+
+**others**
+  * [[`a9cadba`](http://github.com/eggjs/egg-jsonp/commit/a9cadba740dc54b9c3dd0593495b66b5a98383e8)] - refactor: use async function and support egg@2 (#10) (Yiyu He <<dead_horse@qq.com>>)
+
 1.2.2 / 2017-11-10
 ==================
 
