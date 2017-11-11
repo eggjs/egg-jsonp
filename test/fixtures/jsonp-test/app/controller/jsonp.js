@@ -1,16 +1,16 @@
 'use strict';
 
-exports.index = function*() {
-  this.body = { foo: 'bar' };
+exports.index = ctx => {
+  ctx.body = { foo: 'bar' };
 };
 
 exports.empty = function*() {};
 
 
-exports.mark = function*() {
-  this.body = { jsonpFunction: this.acceptJSONP };
+exports.mark = ctx => {
+  ctx.body = { jsonpFunction: ctx.acceptJSONP };
 };
 
-exports.error = function*() {
+exports.error = async () => {
   throw new Error('jsonpFunction is error');
 };

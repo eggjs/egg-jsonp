@@ -50,21 +50,21 @@ module.exports = {
       throw err;
     }
 
-    return function* jsonp(next) {
-      const jsonpFunction = getJsonpFunction(this.query, options.callback);
+    return async function jsonp(ctx, next) {
+      const jsonpFunction = getJsonpFunction(ctx.query, options.callback);
 
-      this[JSONP_CONFIG] = {
+      ctx[JSONP_CONFIG] = {
         jsonpFunction,
         options,
       };
 
       // before handle request, must do some security checks
-      securityAssert(this);
+      securityAssert(ctx);
 
-      yield next;
+      await next();
 
       // generate jsonp body
-      this.createJsonpBody(this.body);
+      ctx.createJsonpBody(ctx.body);
     };
   },
 };
